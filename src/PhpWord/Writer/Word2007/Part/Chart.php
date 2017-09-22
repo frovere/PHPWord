@@ -211,6 +211,15 @@ class Chart extends AbstractPart
                 $this->writeSeriesItem($xmlWriter, 'val', $values);
             }
 
+            if (isset($seriesItem['dataLabels'])) {
+                $dataLabels = $seriesItem['dataLabels'];
+                $xmlWriter->startElement('c:dLbls');
+                foreach ($dataLabels as $dataLabel => $value) {
+                    $xmlWriter->writeElementBlock("c:{$dataLabel}", 'val', $value);
+                }
+                $xmlWriter->endElement(); // c:dLbls
+            }
+
             $xmlWriter->endElement(); // c:ser
             $index++;
         }

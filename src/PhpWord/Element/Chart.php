@@ -111,6 +111,20 @@ class Chart extends AbstractElement
     }
 
     /**
+     * Append values to a serie
+     *
+     * @param int $index
+     * @param array $value
+     * @return void
+     */
+     public function appendToSerie($index, $values)
+     {
+         if (array_key_exists($index, $this->series)) {
+             $this->series[$index] = array_merge($this->series[$index], $values);
+         }
+     }
+
+    /**
      * Get series
      *
      * @return array
