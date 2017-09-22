@@ -106,6 +106,7 @@ class Chart extends AbstractPart
         $xmlWriter->writeElementBlock('c:autoTitleDeleted', 'val', 1);
 
         $this->writePlotArea($xmlWriter);
+        $this->writeLegend($xmlWriter);
 
         $xmlWriter->endElement(); // c:chart
     }
@@ -317,5 +318,28 @@ class Chart extends AbstractPart
         }
         $xmlWriter->endElement(); // a:ln
         $xmlWriter->endElement(); // c:spPr
+    }
+
+    /**
+     * Write legend
+     *
+     * @link http://www.datypic.com/sc/ooxml/t-draw-chart_CT_LegendPos.html
+     * @link http://www.datypic.com/sc/ooxml/e-draw-chart_overlay-1.html
+     * @link http://www.datypic.com/sc/ooxml/e-draw-chart_layout-1.html
+     * @param \PhpOffice\Common\XMLWriter $xmlWriter
+     * @return void
+     */
+    private function writeLegend(XMLWriter $xmlWriter)
+    {
+        $legend = $this->element->getLegend();
+
+        if (!empty($legend)) {
+            $overlay = $legend['overlay'] ? 1 : 0;
+            $xmlWriter->startElement('c:legend');
+            $xmlWriter->writeElementBlock('c:legendPos', 'val', $legend['position']);
+            $xmlWriter->writeElement('c:layout');
+            $xmlWriter->writeElementBlock('c:overlay', 'val', $overlay);
+            $xmlWriter->endElement();
+        }
     }
 }

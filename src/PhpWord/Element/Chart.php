@@ -55,6 +55,13 @@ class Chart extends AbstractElement
     private $style;
 
     /**
+     * Legend position and overlay
+     *
+     * @var array
+     */
+    private $legend = array();
+
+    /**
      * Create new instance
      *
      * @param string $type
@@ -121,5 +128,29 @@ class Chart extends AbstractElement
     public function getStyle()
     {
         return $this->style;
+    }
+
+    /**
+     * Add legend
+     *
+     * @param string $position
+     * @param bool $overlay
+     */
+    public function addLegend($position, $overlay = false)
+    {
+        $enum = array('l', 'r', 'b', 't', 'tr');
+        $position = $this->setEnumVal($position, $enum);
+
+        $this->legend = array('position' => $position, 'overlay' => $overlay);
+    }
+
+    /**
+     * Get legend
+     *
+     * @return array
+     */
+    public function getLegend()
+    {
+        return $this->legend;
     }
 }
