@@ -214,10 +214,31 @@ class Chart extends AbstractPart
             if (isset($seriesItem['dataLabels'])) {
                 $dataLabels = $seriesItem['dataLabels'];
                 $xmlWriter->startElement('c:dLbls');
+                if (isset($dataLabels['callback']) && is_callable($dataLabels['callback'])) {
+                    $dataLabels['callback']($xmlWriter);
+                    unset($dataLabels['callback']);
+                }
                 foreach ($dataLabels as $dataLabel => $value) {
                     $xmlWriter->writeElementBlock("c:{$dataLabel}", 'val', $value);
                 }
                 $xmlWriter->endElement(); // c:dLbls
+            }
+
+            if (isset($seriesItem['colors'])) {
+                foreach ($seriesItem['colors'] as $idx => $color) {
+                    $xmlWriter->startElement('c:dPt');
+                    $xmlWriter->writeElementBlock('c:idx', 'val', $idx);
+                    $xmlWriter->startElement('c:spPr');
+                    $xmlWriter->startElement('a:solidFill');
+                    $xmlWriter->writeElementBlock('a:srgbClr', 'val', $color);
+                    $xmlWriter->endElement();
+                    $xmlWriter->endElement();
+                    $xmlWriter->endElement();
+                }
+            }
+
+            if (isset($seriesItem['callback']) && is_callable($seriesItem['callback'])) {
+                $seriesItem['callback']($xmlWriter);
             }
 
             $xmlWriter->endElement(); // c:ser
@@ -346,7 +367,6 @@ class Chart extends AbstractPart
             $overlay = $legend['overlay'] ? 1 : 0;
             $xmlWriter->startElement('c:legend');
             $xmlWriter->writeElementBlock('c:legendPos', 'val', $legend['position']);
-            $xmlWriter->writeElement('c:layout');
             $xmlWriter->writeElementBlock('c:overlay', 'val', $overlay);
             $xmlWriter->endElement();
         }
